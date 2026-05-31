@@ -1,0 +1,253 @@
+/* Global Styles for Master Tutor */
+:root {
+    --primary-color: #3498db;
+    --success-color: #27ae60;
+    --error-bg: #fff5f5;
+    --error-border: #feb2b2;
+    --sidebar-bg: #f8f9fa;
+    --dialogue-bg: #f0f4f8;
+    --box-bg: #f9f9f9;
+    --text-main: #333;
+    --text-muted: #666;
+    --active-link-bg: #e1f0fa;
+}
+
+body { 
+    font-family: sans-serif; 
+    line-height: 1.6;
+    color: var(--text-main); 
+    margin: 0;
+    padding: 0;
+    background-color: #fff;
+}
+
+/* Formatting for standalone lesson pages and content inside the frame */
+body:not(.dashboard-layout) {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 0 20px;
+    padding-left: calc(20px + env(safe-area-inset-left));
+    padding-right: calc(20px + env(safe-area-inset-right));
+}
+
+/* Dashboard Shell Layout */
+.dashboard-layout {
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+}
+
+.sidebar {
+    width: 280px;
+    min-width: 280px;
+    background-color: var(--sidebar-bg);
+    border-right: 1px solid #ddd;
+    padding: 20px;
+    padding-left: calc(20px + env(safe-area-inset-left));
+    padding-right: calc(10px + env(safe-area-inset-right));
+    overflow-y: auto;
+    flex-shrink: 0;
+}
+
+.sidebar h2 { margin-top: 0; font-size: 1.4rem; }
+.sidebar h3 { font-size: 1rem; color: var(--text-muted); margin-top: 25px; }
+.sidebar ul { list-style: none; padding: 0; }
+.sidebar li { margin-bottom: 10px; font-size: 0.9rem; }
+.sidebar a { text-decoration: none; color: var(--primary-color); }
+.sidebar a:hover { text-decoration: underline; }
+.sidebar a.active { 
+    font-weight: bold;
+    color: #2980b9;
+}
+
+/* Navigation Toggle (Mobile Only) */
+.nav-toggle { display: none; }
+.nav-toggle-label { display: none; }
+
+.main-viewport {
+    flex-grow: 1;
+    height: 100%;
+    background-color: #fff;
+    border: none;
+}
+
+table { 
+    width: 100%; 
+    border-collapse: collapse; 
+    margin: 20px 0;
+    display: block;
+    overflow-x: auto;
+}
+
+/* Audio Trigger Styles */
+.vocab-table td:first-child {
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.vocab-table td:first-child:hover {
+    background-color: var(--active-link-bg);
+    border-radius: 4px;
+}
+
+/* Phrase and Dialogue Audio Styles */
+.speak {
+    cursor: pointer;
+    border-bottom: 1px dotted var(--primary-color);
+    transition: color 0.2s, background-color 0.2s;
+}
+
+.speak:hover {
+    background-color: var(--active-link-bg);
+    color: var(--primary-color);
+}
+
+/* Flashcard Mode: Blurs the target study column (column 3) only in vocab tables */
+.vocab-table td:nth-child(3) { 
+    color: transparent; 
+    text-shadow: 0 0 8px rgba(0,0,0,0.5); 
+    cursor: pointer; 
+    transition: 0.3s ease; 
+    user-select: none; /* Prevent accidental reveal via selection */
+}
+
+.vocab-table td:nth-child(3):hover, 
+.vocab-table td:nth-child(3):active,
+.vocab-table td:nth-child(3).revealed { 
+    color: inherit; 
+    text-shadow: none; 
+}
+
+/* Lesson Navigation Component */
+.lesson-nav {
+    margin-top: 50px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+    display: flex;
+    gap: 15px;
+}
+
+.lesson-nav a {
+    padding: 10px 20px;
+    background-color: var(--primary-color);
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    transition: background 0.2s;
+}
+
+.lesson-nav a:hover {
+    background-color: #2980b9;
+    text-decoration: none;
+}
+
+/* Sidebar Specific Components */
+.sidebar-section {
+    margin-bottom: 20px;
+}
+
+.btn-secondary {
+    width: 100%;
+    padding: 10px;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: background 0.2s;
+}
+
+.btn-secondary:hover {
+    background-color: #2980b9;
+}
+
+/* Global UI Components */
+.pitfall {
+    background: var(--error-bg);
+    border-left: 5px solid var(--error-border);
+    padding: 15px;
+    margin: 20px 0;
+}
+
+.dialogue {
+    background: var(--dialogue-bg);
+    padding: 15px;
+    border-radius: 8px;
+    margin: 15px 0;
+}
+
+.submission-box {
+    margin-top: 20px; 
+    padding: 15px; 
+    border: 1px solid #ddd; 
+    background: var(--box-bg);
+    border-radius: 5px;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 1024px) {
+    .nav-toggle-label {
+        display: flex;
+        position: fixed;
+        top: 15px;
+        top: calc(15px + env(safe-area-inset-top));
+        right: 15px;
+        right: calc(15px + env(safe-area-inset-right));
+        height: 40px;
+        width: 40px;
+        background: var(--primary-color);
+        border-radius: 5px;
+        z-index: 1001;
+        cursor: pointer;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .nav-toggle-label span, .nav-toggle-label span::before, .nav-toggle-label span::after {
+        display: block;
+        background: white;
+        height: 2px;
+        width: 25px;
+        position: relative;
+    }
+
+    .nav-toggle-label span::before { content: ''; top: -8px; }
+    .nav-toggle-label span::after { content: ''; top: 6px; }
+
+    .sidebar {
+        position: fixed;
+        left: -320px; /* Increased to ensure it's fully off-screen */
+        top: 0;
+        height: 100vh;
+        width: 280px;
+        z-index: 1000;
+        transition: left 0.3s ease;
+        box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+    }
+
+    /* When checkbox is checked, slide sidebar in */
+    .nav-toggle:checked ~ .sidebar {
+        left: 0;
+    }
+
+    .dashboard-layout {
+        flex-direction: column;
+    }
+
+    .main-viewport {
+        width: 100%;
+        height: 100vh;
+        -webkit-overflow-scrolling: touch; /* Smooth scrolling for iOS */
+        overflow-y: auto;
+    }
+
+    body:not(.dashboard-layout) {
+        margin: 20px auto;
+        padding: 0 15px;
+        padding-left: calc(15px + env(safe-area-inset-left));
+        padding-right: calc(15px + env(safe-area-inset-right));
+    }
+}

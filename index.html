@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Master Tutor - Language Learning Portal</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="dashboard-layout">
+    <input type="checkbox" id="nav-toggle" class="nav-toggle">
+    <label for="nav-toggle" class="nav-toggle-label">
+        <span></span>
+    </label>
+
+    <aside class="sidebar">
+        <h2>Master Tutor</h2>
+        <div class="live-link" style="margin-bottom: 20px;">
+            <a href="https://gcanchet.github.io/master-tutor/" target="_blank" style="font-size: 0.8em; color: #27ae60;">🌐 View Live Site</a>
+        </div>
+
+        <div class="sidebar-section">
+            <button class="btn-secondary test-audio-trigger">🔊 Test Audio System</button>
+        </div>
+
+        <nav>
+            <h3>🇰🇷 Korean Track</h3>
+            <ul>
+                <li><a href="korean/Syllabus.html" target="content-frame">Full Syllabus</a></li>
+                <li><a href="korean/Lesson_00_Hangul.html" target="content-frame">Lesson 00: Hangul</a></li>
+                <li><a href="korean/Lesson_01.html" target="content-frame">Lesson 01: Identity</a></li>
+                <li><a href="korean/Lesson_02.html" target="content-frame">Lesson 02: Actions</a></li>
+                <li><a href="korean/Lesson_03.html" target="content-frame">Lesson 03: Locations</a></li>
+                <li><a href="korean/Lesson_04.html" target="content-frame">Lesson 04: Numbers</a></li>
+                <li><a href="korean/Lesson_05.html" target="content-frame">Lesson 05: Existence</a></li>
+                <li><a href="korean/Lesson_06.html" target="content-frame">Lesson 06: Describing</a></li>
+                <li><a href="korean/Lesson_07.html" target="content-frame">Lesson 07: Past Tense</a></li>
+                <li><a href="korean/Lesson_08.html" target="content-frame">Lesson 08: Intentions</a></li>
+                <li><a href="korean/Lesson_09.html" target="content-frame">Lesson 09: Requests</a></li>
+            </ul>
+
+            <h3>🇨🇳 Chinese Track</h3>
+            <ul>
+                <li><a href="chinese/Syllabus.html" target="content-frame">Full Syllabus</a></li>
+                <li><a href="chinese/Lesson_00_Pinyin.html" target="content-frame">Lesson 00: Pinyin</a></li>
+                <li><a href="chinese/Lesson_01.html" target="content-frame">Lesson 01: Greetings</a></li>
+                <li><a href="chinese/Lesson_02.html" target="content-frame">Lesson 02: Identity</a></li>
+                <li><a href="chinese/Lesson_03.html" target="content-frame">Lesson 03: Questions</a></li>
+                <li><a href="chinese/Lesson_04.html" target="content-frame">Lesson 04: Numbers</a></li>
+                <li><a href="chinese/Lesson_05.html" target="content-frame">Lesson 05: Dates</a></li>
+                <li><a href="chinese/Lesson_06.html" target="content-frame">Lesson 06: Family</a></li>
+                <li><a href="chinese/Lesson_07.html" target="content-frame">Lesson 07: Nationality</a></li>
+                <li><a href="chinese/Lesson_08.html" target="content-frame">Lesson 08: Locations</a></li>
+                <li><a href="chinese/Lesson_09.html" target="content-frame">Lesson 09: Ordering Food</a></li>
+            </ul>
+        </nav>
+        <footer style="margin-top: 50px; font-size: 0.7em; color: #888;">
+            <p>Managed by Language Tutor<br>Orchestration Protocol</p>
+        </footer>
+    </aside>
+
+    <iframe name="content-frame" class="main-viewport" src="home.html"></iframe>
+
+    <script>
+        // Automatically close the mobile sidebar when a lesson link is clicked
+        const navLinks = document.querySelectorAll('.sidebar a');
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.forEach(l => l.classList.remove('active'));
+                link.classList.add('active');
+                document.getElementById('nav-toggle').checked = false;
+            });
+        });
+
+        // Global Test Audio Logic for all triggers
+        const audioTriggers = document.querySelectorAll('.test-audio-trigger');
+        audioTriggers.forEach(btn => {
+            btn.addEventListener('click', () => {
+                window.speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance("Audio check. Hello! 안녕하세요! 你好!");
+                utterance.rate = 0.9;
+                window.speechSynthesis.speak(utterance);
+            });
+        });
+
+        // Global event listeners for content inside the iframe
+        const iframe = document.querySelector('.main-viewport');
+        iframe.addEventListener('load', () => {
+            const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+            iframeDoc.addEventListener('click', (e) => {
+                // Handle Flashcard Reveal (Column 3)
+                const revealTd = e.target.closest('.vocab-table td:nth-child(3)');
+                if (revealTd) revealTd.classList.toggle('revealed');
+
+                // Handle Audio Playback (Column 1)
+                const audioTarget = e.target.closest('.vocab-table td:first-child, .speak');
+                if (audioTarget) {
+                    // Clear any previous speech queue to prevent freezing on mobile
+                    window.speechSynthesis.cancel();
+
+                    const text = audioTarget.innerText;
+                    const utterance = new SpeechSynthesisUtterance(text);
+                    
+                    // Detect language from the iframe's current path
+                    const path = iframe.contentWindow.location.pathname.toLowerCase();
+                    if (path.includes('/korean/')) utterance.lang = 'ko-KR';
+                    else if (path.includes('/chinese/')) utterance.lang = 'zh-CN';
+
+                    // Android/Chrome mobile fix: resume if the engine is in a paused state
+                    if (window.speechSynthesis.paused) {
+                        window.speechSynthesis.resume();
+                    }
+                    
+                    window.speechSynthesis.speak(utterance);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
